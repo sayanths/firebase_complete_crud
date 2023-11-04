@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/color/color.dart';
 import '../../../responsive/responsive.dart';
+import '../../bottom_nav/view/bottom_nav.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -68,7 +69,11 @@ class LoginView extends StatelessWidget {
                     color: Apc.primary,
                     width: Responsive.widthMultiplier! * 83,
                     height: Responsive.heightMultiplier! * 5,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const BottomNavigationCustom(),
+                      ));
+                    },
                   ),
                   heightSmall,
                   const JoinAccountWidget(),

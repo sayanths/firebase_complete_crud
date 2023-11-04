@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_todo/feature/login_view/view/login_view.dart';
 
+import '../feature/bottom_nav/view/bottom_nav.dart';
+
 class Routes {
   static final routeKey = GlobalKey<NavigatorState>();
 
   Map<String, Widget Function(BuildContext)> route = {
-    "/loginView": (context) => const LoginView()
+    "/loginView": (context) => const LoginView(),
+    "/BottomNavigationCustom": (context) => const BottomNavigationCustom()
   };
 
   static push({required var screen}) {
