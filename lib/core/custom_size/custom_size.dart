@@ -9,6 +9,10 @@ SizedBox heightSmall = SizedBox(
   height: Responsive.heightMultiplier! * 2,
 );
 
+SizedBox heightVerySmall = SizedBox(
+  height: Responsive.heightMultiplier! * 1,
+);
+
 SizedBox heightMedium = SizedBox(
   height: Responsive.heightMultiplier! * 4,
 );

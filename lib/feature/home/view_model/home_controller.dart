@@ -16,4 +16,10 @@ class HomeController extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  List<String> categoryList = [
+    'assets/send.png',
+    'assets/amount recive.png',
+    'assets/recive.png',
+  ];
 }

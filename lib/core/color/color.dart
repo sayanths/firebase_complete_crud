@@ -18,4 +18,5 @@ class Apc {
   static const Color rose = Color(0xFFd32544);
   static const Color primary = Color.fromARGB(255, 0, 58, 173);
   static const Color loginContainerColor = Color(0xFFD898F6);
+  static const Color blueColor = Color.fromARGB(255, 0, 179, 255);
 }

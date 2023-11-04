@@ -1,6 +1,7 @@
 import 'package:firebase_todo/feature/bottom_nav/view/widget/model.dart';
 import 'package:firebase_todo/feature/history/view/history.dart';
 import 'package:firebase_todo/feature/home/view/home_view.dart';
+import 'package:firebase_todo/feature/home/view/widget/add_userdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,11 @@ class BottomNavigationCustom extends StatelessWidget {
           onChange: (id) {
             bottomNavValue.onChanged(id);
           },
-          onFabButtonPressed: () {},
+          onFabButtonPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const AddUserDetails(),
+            ));
+          },
         ),
         body: Builder(
           builder: (context) {
