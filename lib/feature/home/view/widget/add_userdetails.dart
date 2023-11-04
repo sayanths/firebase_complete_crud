@@ -22,7 +22,7 @@ class AddUserDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = context.watch<HomeController>();
-    log(data.totList.first.age.toString());
+    log(data.totList[0].id.toString());
     if (mode == AddEditMode.edit) {
       data.ageField.text = data.totList[0].age.toString();
       data.nameField.text = data.totList[0].name.toString();

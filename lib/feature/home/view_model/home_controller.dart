@@ -93,8 +93,10 @@ class HomeController extends ChangeNotifier {
           firestore.collection('userProfile').doc(user.uid);
       final CollectionReference userDetails =
           userProfileRef.collection('userDetails');
-
+      id = userDetails.id;
+      notifyListeners();
       Map<String, dynamic> data = {
+        "id": userDetails.id,
         "name": nameField.text.trim(),
         "email": emailField.text.trim().toLowerCase(),
         "age": int.tryParse(ageField.text),
