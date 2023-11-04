@@ -1,9 +1,11 @@
 import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_textfield/custom_textfield.dart';
 import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
+import 'package:firebase_todo/feature/login_view/view/login_view.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../../../responsive/responsive.dart';
@@ -129,7 +131,13 @@ class ProfileView extends StatelessWidget {
                                       children: [
                                         TextButton(
                                           child: const Text("Yes"),
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            FlutterSecureStorage prefs =
+                                                const FlutterSecureStorage();
+                                            await prefs.deleteAll();
+                                            Routes.pushRemoveUntilNonNamed(
+                                                const LoginView());
+                                          },
                                         ),
                                         TextButton(
                                           child: const Text("No"),

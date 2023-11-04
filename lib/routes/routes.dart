@@ -11,8 +11,25 @@ class Routes {
     "/BottomNavigationCustom": (context) => const BottomNavigationCustom()
   };
 
-  static push({required var screen}) {
+  static push({
+    required var screen,
+  }) {
     routeKey.currentState?.pushNamed(screen);
+  }
+
+  static pushNamed({
+    required String screen,
+    String? arguments,
+  }) {
+    routeKey.currentState?.pushNamed(screen, arguments: arguments);
+  }
+
+  static pushNonNamed({required var screen}) {
+    routeKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => screen,
+      ),
+    );
   }
 
   static back({bool? value}) {
@@ -51,6 +68,21 @@ class Routes {
           );
         },
       ),
+    );
+  }
+
+  static pushReplaceNonNamed({required var screen}) {
+    routeKey.currentState?.pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => screen,
+      ),
+    );
+  }
+
+  static pushRemoveUntilNonNamed(Widget screen) {
+    routeKey.currentState?.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => screen),
+      (route) => false, // Remove all previous routes from the stack
     );
   }
 }

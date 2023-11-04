@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/custom_size/custom_size.dart';
@@ -14,150 +13,180 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   elevation: 0,
-      //   leading: const SizedBox(),
-      //   backgroundColor: Apc.white,
-      //   actions: const [
-      //     Padding(
-      //       padding: EdgeInsets.symmetric(horizontal: 16),
-      //       child: CircleAvatar(),
-      //     )
-      //   ],
-      // ),
+      backgroundColor: Apc.primary,
       body: SafeArea(
         child: Column(
           children: [
-            heightSmall,
-            heightVerySmall,
             Expanded(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomContainer(
-                height: 50,
-                width: double.infinity,
-                decoration: const BoxDecoration(),
+                child: CustomContainer(
+              decoration: const BoxDecoration(
+                  color: Apc.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  )),
+              height: 150,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    heightMedium,
+                    CustomContainer(
+                      height: 70,
+                      width: double.infinity,
+                      decoration: const BoxDecoration(),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Welcome",
+                                    style: K2DFonts.regular(),
+                                  ),
+                                  heightVerySmall,
+                                  Text(
+                                    "Sayanth A !!",
+                                    style: K2DFonts.bold(fontSize: 25),
+                                  ),
+                                ],
+                              ),
+                              const CircleAvatar(
+                                radius: 25,
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Divider(),
+                    ),
+                    heightVerySmall,
+                    Consumer<HomeController>(
+                      builder: (context, homePro, _) => LimitedBox(
+                        maxHeight: Responsive.heightMultiplier! * 10,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: homePro.categoryList.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return CustomBox(
+                              image: homePro.categoryList[index],
+                              title: '',
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    heightVerySmall,
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Divider(),
+                    ),
+                    heightSmall,
+                    heightSmall,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Welcome",
-                              style: K2DFonts.regular(),
-                            ),
-                            heightVerySmall,
-                            Text(
-                              "Sayanth A !!",
-                              style: K2DFonts.bold(fontSize: 25),
-                            ),
-                          ],
+                        Text(
+                          "Todo Details",
+                          style: K2DFonts.bold(fontSize: 22, color: Apc.black),
                         ),
-                        const CircleAvatar(
-                          radius: 25,
-                        )
+                        Text(
+                          "View All",
+                          style: K2DFonts.medium(fontSize: 15, color: Apc.grey),
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             )),
             Expanded(
-                flex: 3,
                 child: CustomContainer(
-                  color: Apc.white,
-                  height: 50,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        heightVerySmall,
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Divider(),
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              height: 50,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  borderRadius:
+                      BorderRadius.only(topLeft: Radius.circular(20))),
+              child: Card(
+                child: CustomContainer(
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Apc.grey)),
+                    height: Responsive.heightMultiplier! * 11,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: const ListTile(
+                        title: TextWidget(
+                          name: 'Name : ',
+                          subTitle: 'sayatnth Athiyadath ',
                         ),
-                        heightVerySmall,
-                        Consumer<HomeController>(
-                          builder: (context, homePro, _) => LimitedBox(
-                            maxHeight: Responsive.heightMultiplier! * 10,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: 3,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return CustomBox(
-                                  image: homePro.categoryList[index],
-                                  title: '',
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        heightVerySmall,
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Divider(),
-                        ),
-                        heightMedium,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        subtitle: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              "Todo Details",
-                              style:
-                                  K2DFonts.bold(fontSize: 22, color: Apc.black),
-                            ),
-                            Text(
-                              "View All",
-                              style: K2DFonts.medium(
-                                  fontSize: 17, color: Apc.grey),
-                            ),
+                            // const TextWidget(
+                            //   name: 'Age : ',
+                            //   subTitle: 'sayatnth Athiyadath ',
+                            // ),
+                            // heightVerySmall,
+                            // const TextWidget(
+                            //   name: 'Email : ',
+                            //   subTitle: 'sayatnth Athiyadath ',
+                            // ),
                           ],
                         ),
-                        heightSmall,
-                      ],
-                    ),
-                  ),
-                )),
-            Expanded(
-                flex: 5,
-                child: CustomContainer(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      heightSmall,
-                      Card(
-                        child: CustomContainer(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Apc.grey)),
-                          height: Responsive.heightMultiplier! * 15,
-                          width: double.infinity,
-                          child: Row(
-                            children: [
-                              Expanded(child: CachedNetworkImage(imageUrl: '')),
-                              const Expanded(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("data"),
-                                ],
-                              ))
-                            ],
-                          ),
-                        ),
                       ),
-                    ],
-                  ),
-                ))
+                    )),
+              ),
+            ))
           ],
         ),
       ),
+    );
+  }
+}
+
+class TextWidget extends StatelessWidget {
+  final String name;
+  final String subTitle;
+  const TextWidget({
+    super.key,
+    required this.name,
+    required this.subTitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: Text(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            name,
+            style: K2DFonts.medium(),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            subTitle,
+            style: K2DFonts.regular(),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -175,8 +204,8 @@ class CustomBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       margin: EdgeInsets.symmetric(horizontal: Responsive.widthMultiplier! * 2),
-      height: Responsive.heightMultiplier! * 10,
-      width: Responsive.widthMultiplier! * 25,
+      height: Responsive.heightMultiplier! * 8,
+      width: Responsive.widthMultiplier! * 18,
       decoration: BoxDecoration(
           color: Apc.blueColor.withOpacity(0.2),
           borderRadius: BorderRadius.circular(10),
@@ -190,7 +219,7 @@ class CustomBox extends StatelessWidget {
       child: Center(
           child: Image.asset(
         image,
-        height: 40,
+        height: 35,
       )),
     );
   }

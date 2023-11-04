@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class PlatformButton extends StatelessWidget {
   final VoidCallback? onPressed;
-  final String text;
+  final Widget text;
   final Color color;
   final double width;
   final double height;
@@ -28,10 +28,7 @@ class PlatformButton extends StatelessWidget {
           width: width,
           height: height,
           alignment: Alignment.center,
-          child: Text(
-            text,
-            style: K2DFonts.bold(fontSize: 18),
-          ),
+          child: text
         ),
       );
     } else {
@@ -44,10 +41,7 @@ class PlatformButton extends StatelessWidget {
           width: width,
           height: height,
           alignment: Alignment.center,
-          child: Text(
-            text,
-            style: K2DFonts.bold(fontSize: 18),
-          ),
+          child: text
         ),
       );
     }

@@ -6,6 +6,7 @@ import 'package:firebase_todo/core/google_fonts/google_fonts.dart';
 import 'package:firebase_todo/core/images/login_images.dart';
 import 'package:firebase_todo/feature/login_view/view/widget/custom_or.dart';
 import 'package:firebase_todo/feature/login_view/view_model/login_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -65,7 +66,10 @@ class LoginView extends StatelessWidget {
                   heightSmall,
                   heightSmall,
                   PlatformButton(
-                    text: 'Login',
+                    text: Text(
+                      'Login',
+                      style: K2DFonts.bold(fontSize: 18),
+                    ),
                     color: Apc.primary,
                     width: Responsive.widthMultiplier! * 83,
                     height: Responsive.heightMultiplier! * 5,
@@ -135,27 +139,31 @@ class GoogleLoginWidget extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: Apc.white)),
-            child: Row(
-              children: [
-                const Spacer(),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Responsive.widthMultiplier! * 2,
-                  ),
-                  child: Image.asset(
-                    "assets/logo google.png",
-                    height: Responsive.heightMultiplier! * 3,
-                  ),
-                ),
-                Text(
-                  "Join with google",
-                  style: TextStyle(
-                      color: Apc.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: Responsive.textMultiplier! * 2),
-                ),
-                const Spacer(),
-              ],
+            child: Consumer<LoginController>(
+              builder: (context, value, _) => value.googleAuthLoading == true
+                  ? const CircularProgressIndicator()
+                  : Row(
+                      children: [
+                        const Spacer(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Responsive.widthMultiplier! * 2,
+                          ),
+                          child: Image.asset(
+                            "assets/logo google.png",
+                            height: Responsive.heightMultiplier! * 3,
+                          ),
+                        ),
+                        Text(
+                          "Join with google",
+                          style: TextStyle(
+                              color: Apc.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Responsive.textMultiplier! * 2),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
             ),
           ),
         ),
@@ -188,5 +196,24 @@ class JoinAccountWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class PlatformCircularProgressIndicator extends StatelessWidget {
+  const PlatformCircularProgressIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      // For iOS, show a CupertinoActivityIndicator
+      return const CupertinoActivityIndicator(
+        color: Apc.white,
+      );
+    } else {
+      // For Android and other platforms, show a CircularProgressIndicator
+      return const CircularProgressIndicator(
+        color: Apc.white,
+      );
+    }
   }
 }

@@ -59,7 +59,10 @@ class AddUserDetails extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: PlatformButton(
-          text: 'Submit',
+          text: Text(
+            'Submit',
+            style: K2DFonts.bold(fontSize: 18),
+          ),
           color: Apc.primary,
           width: Responsive.widthMultiplier! * 83,
           height: Responsive.heightMultiplier! * 5,

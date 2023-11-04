@@ -21,6 +21,7 @@ class HomeController extends ChangeNotifier {
     'assets/send.png',
     'assets/amount recive.png',
     'assets/recive.png',
+    'assets/recive.png',
   ];
 
   final todoAdding = GlobalKey<FormState>();

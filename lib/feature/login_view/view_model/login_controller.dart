@@ -1,11 +1,11 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo/feature/bottom_nav/view/bottom_nav.dart';
 import 'package:firebase_todo/feature/login_view/model/login.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,10 +22,14 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool googleAuthLoading = false;
   Future<String> googleSignin(BuildContext context) async {
-    const CircularProgressIndicator();
+    FlutterSecureStorage prefs = const FlutterSecureStorage();
+    googleAuthLoading = true;
     notifyListeners();
     try {
+      googleAuthLoading = false;
+      notifyListeners();
       final isLoged = await GoogleSignIn().isSignedIn();
       if (isLoged) GoogleSignIn().signOut();
       final result = await GoogleSignIn().signIn();
@@ -56,13 +60,17 @@ class LoginController extends ChangeNotifier {
               userData.toSnapshot(),
             );
         userIdFun(userData.email);
+
         log(userData.toString());
       }
+      await prefs.write(key: 'googleauth', value: true.toString());
       await saveUserData();
-      Routes.pushReplace(screen: '/bottomNavView');
+      Routes.pushReplaceNonNamed(screen: const BottomNavigationCustom());
 
       return Future.value('');
     } on FirebaseAuthException catch (ex) {
+      googleAuthLoading = false;
+      notifyListeners();
       return Future.value(ex.message);
     }
   }
