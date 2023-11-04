@@ -1,17 +1,29 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeController extends ChangeNotifier {
+  HomeController() {
+    fetchUserData();
+  }
   String? name;
   String? photo;
   String? email;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> fetchUserData() async {
+    FlutterSecureStorage prefs = const FlutterSecureStorage();
     final User? user = _auth.currentUser;
     if (user != null) {
-      name = user.displayName;
-      photo = user.photoURL;
-      email = user.email;
+      String? names = await prefs.read(key: 'name');
+      name = names ?? "Loading..";
+      String? photos = await prefs.read(key: 'photo');
+      photo = photos ?? "";
+      String? emails = await prefs.read(key: 'email');
+      email = emails ?? "loading..";
       notifyListeners();
     }
     notifyListeners();
@@ -33,6 +45,42 @@ class HomeController extends ChangeNotifier {
   TextEditingController get ageField => _ageField;
   final TextEditingController _numnerField = TextEditingController();
   TextEditingController get numnerField => _numnerField;
+
+  bool isDataAdding = false;
+  Future<void> addToCollection() async {
+    isDataAdding == true;
+    notifyListeners();
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final User? user = FirebaseAuth.instance.currentUser;
+    final DocumentReference userProfileRef =
+        firestore.collection('userProfile').doc(user?.uid);
+    final CollectionReference carsCollectionRef =
+        userProfileRef.collection('userDetails');
+    Map<String, dynamic> data = {
+      "name": nameField.text.trim(),
+      "email": emailField.text.trim().toLowerCase(),
+      "age": int.tryParse(
+        ageField.text,
+      ),
+      "number": int.tryParse(
+        numnerField.text,
+      ),
+    };
+    log(data.toString());
+    await carsCollectionRef.add(data).then((value) {
+      isDataAdding == false;
+      notifyListeners();
+      onClear();
+      Routes.back();
+      log("Item added to collection successfully!");
+    }).catchError((error) {
+      isDataAdding == false;
+      notifyListeners();
+      log("Failed to add item to collection: $error");
+    });
+    isDataAdding == false;
+    notifyListeners();
+  }
 
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -107,5 +155,12 @@ class HomeController extends ChangeNotifier {
     final regex = RegExp(pattern);
 
     return !regex.hasMatch(value) ? 'Enter a valid email address' : null;
+  }
+
+  void onClear() {
+    nameField.clear();
+    ageField.clear();
+    numnerField.clear();
+    emailField.clear();
   }
 }

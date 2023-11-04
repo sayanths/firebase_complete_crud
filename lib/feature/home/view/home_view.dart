@@ -50,10 +50,14 @@ class HomeView extends StatelessWidget {
                                     style: K2DFonts.regular(),
                                   ),
                                   heightVerySmall,
-                                  Text(
-                                    "Sayanth A !!",
-                                    style: K2DFonts.bold(fontSize: 25),
-                                  ),
+                                  Consumer<HomeController>(
+                                    builder: (context, value, _) {
+                                      return Text(
+                                        "${value.name} !!",
+                                        style: K2DFonts.bold(fontSize: 25),
+                                      );
+                                    },
+                                  )
                                 ],
                               ),
                               const CircleAvatar(

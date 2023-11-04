@@ -43,7 +43,14 @@ class LoginController extends ChangeNotifier {
           idToken: cred.idToken,
         ),
       );
+
+      FlutterSecureStorage prefs = const FlutterSecureStorage();
+
       final userDetail = userProfile.user;
+
+      await prefs.write(key: 'name', value: userDetail?.displayName ?? "");
+      await prefs.write(key: 'photo', value: userDetail?.photoURL ?? "");
+      await prefs.write(key: 'email', value: userDetail?.email ?? "");
 
       if (userProfile.additionalUserInfo!.isNewUser == true) {
         final userData = UserModel(
