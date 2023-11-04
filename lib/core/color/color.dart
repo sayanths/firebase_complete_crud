@@ -16,6 +16,6 @@ class Apc {
   static const Color fadeWhite = Color(0xFFE5E5E5);
   static const Color fadeRed = Color(0xFFE50000);
   static const Color rose = Color(0xFFd32544);
-  static const Color primary = Color(0xFFE7EBF4);
+  static const Color primary = Color.fromARGB(255, 0, 58, 173);
   static const Color loginContainerColor = Color(0xFFD898F6);
 }

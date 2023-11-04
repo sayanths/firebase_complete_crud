@@ -1,0 +1,14 @@
+import 'package:firebase_todo/responsive/responsive.dart';
+import 'package:flutter/material.dart';
+
+SizedBox height10 = SizedBox(
+  height: Responsive.heightMultiplier! * 8,
+);
+
+SizedBox heightSmall = SizedBox(
+  height: Responsive.heightMultiplier! * 2,
+);
+
+SizedBox heightMedium = SizedBox(
+  height: Responsive.heightMultiplier! * 4,
+);

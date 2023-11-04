@@ -9,12 +9,12 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<SplashController>();
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Apc.primary,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
+        children: [
           Center(
             child: Text("SplasH vIEW"),
           ),
