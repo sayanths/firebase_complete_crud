@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_todo/core/color/color.dart';
+import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/custom_textfield/custom_textfield.dart';
 import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
 import 'package:firebase_todo/feature/login_view/view/login_view.dart';
@@ -31,19 +33,20 @@ class ProfileView extends StatelessWidget {
                   Positioned(
                     bottom: -60,
                     left: 15,
-                    child: Container(
-                      height: Responsive.heightMultiplier! * 20,
-                      width: Responsive.widthMultiplier! * 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 3, color: Apc.white),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              value.photo ??
-                                  "https://res.cloudinary.com/dxszpyksf/image/upload/v1680421246/profile_pic_loading_ukqdhy.jpg",
-                            ),
-                            fit: BoxFit.cover),
-                        color: Apc.grey,
-                        borderRadius: BorderRadius.circular(8),
+                    child: Consumer<HomeController>(
+                      builder: (context, value, _) => CustomContainer(
+                        height: Responsive.heightMultiplier! * 20,
+                        width: Responsive.widthMultiplier! * 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 3, color: Apc.white),
+                          image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                value.photo ?? "",
+                              ),
+                              fit: BoxFit.cover),
+                          color: Apc.grey,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
