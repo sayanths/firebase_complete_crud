@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_todo/feature/home/model/detail_model.dart';
@@ -8,6 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+
+enum AddEditMode {
+  add,
+  edit,
+}
 
 class HomeController extends ChangeNotifier {
   HomeController() {
@@ -74,10 +77,12 @@ class HomeController extends ChangeNotifier {
   TextEditingController get ageField => _ageField;
   final TextEditingController _numnerField = TextEditingController();
   TextEditingController get numnerField => _numnerField;
-
+  String? id = '';
   bool isDataAdding = false;
-  Future<void> addToCollection(BuildContext context) async {
-    isDataAdding = true;
+  bool editingData = false;
+  Future<void> addToCollection(BuildContext context, AddEditMode mode) async {
+    mode == AddEditMode.add ? isDataAdding = true : editingData == true;
+
     notifyListeners();
 
     final User? user = FirebaseAuth.instance.currentUser;
@@ -93,34 +98,59 @@ class HomeController extends ChangeNotifier {
         "name": nameField.text.trim(),
         "email": emailField.text.trim().toLowerCase(),
         "age": int.tryParse(ageField.text),
-        "number": int.tryParse(numnerField.text),
+        "number": int.tryParse(numnerField.text.trim()),
       };
 
-      log(data.toString());
-      await userDetails.add(data).then((value) {
-        isDataAdding = false;
-        notifyListeners();
-        onClear();
-        Routes.back();
-        showTopSnackBar(
-          Overlay.of(context),
-          const CustomSnackBar.success(
-            message: 'Item added to collection successfully!',
-          ),
-        );
-      }).catchError((error) {
-        isDataAdding = false;
-        notifyListeners();
-        showTopSnackBar(
-          Overlay.of(context),
-          CustomSnackBar.error(
-            message: "Failed to add item to collection: $error",
-          ),
-        );
-      });
+      if (mode == AddEditMode.add) {
+        // Adding a new item
+        await userDetails.add(data).then((value) {
+          mode == AddEditMode.add ? isDataAdding = false : editingData == false;
+          notifyListeners();
+          onClear();
+          Routes.back();
+          showTopSnackBar(
+            Overlay.of(context),
+            const CustomSnackBar.success(
+              message: 'Item added to collection successfully!',
+            ),
+          );
+        }).catchError((error) {
+          isDataAdding = false;
+          notifyListeners();
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: "Failed to add item to collection: $error",
+            ),
+          );
+        });
+      } else if (mode == AddEditMode.edit) {
+        // Editing an existing item
+        await userDetails.doc(id).update(data).then((value) {
+          editingData == false;
+          notifyListeners();
+          Routes.back();
+          showTopSnackBar(
+            Overlay.of(context),
+            const CustomSnackBar.success(
+              message: 'Item updated successfully!',
+            ),
+          );
+        }).catchError((error) {
+          editingData = false;
+          notifyListeners();
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: "Failed to update item in collection: $error",
+            ),
+          );
+        });
+      }
     } else {
       // Handle the case where the user is not authenticated
       isDataAdding = false;
+      editingData = false;
       notifyListeners();
       // You can show an error message or navigate the user to the login screen.
     }

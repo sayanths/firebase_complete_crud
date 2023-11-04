@@ -2,7 +2,11 @@ import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_size/custom_size.dart';
 import 'package:firebase_todo/core/google_fonts/google_fonts.dart';
 import 'package:firebase_todo/feature/home/model/detail_model.dart';
+import 'package:firebase_todo/feature/home/view/widget/add_userdetails.dart';
+import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
+import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../home_view.dart';
 
@@ -20,6 +24,19 @@ class OverView extends StatelessWidget {
           style: K2DFonts.bold(fontSize: 18),
         ),
         backgroundColor: Apc.primary,
+        actions: [
+          Consumer<HomeController>(
+            builder: (context, value, _) => IconButton(
+                onPressed: () {
+                  Routes.pushNonNamed(
+                      screen: AddUserDetails(mode: AddEditMode.edit));
+                },
+                icon: const Icon(
+                  Icons.edit,
+                  color: Apc.white,
+                )),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
