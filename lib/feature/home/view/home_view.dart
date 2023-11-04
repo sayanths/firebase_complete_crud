@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/custom_size/custom_size.dart';
 import 'package:firebase_todo/core/google_fonts/google_fonts.dart';
+import 'package:firebase_todo/feature/home/view/widget/view_all.dart';
 import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
 import 'package:firebase_todo/responsive/responsive.dart';
+import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +15,9 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<HomeController>().todoLIstFun();
     return Scaffold(
-      backgroundColor: Apc.primary,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
@@ -32,38 +36,42 @@ class HomeView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    heightMedium,
                     CustomContainer(
-                      height: 70,
+                      height: 100,
                       width: double.infinity,
                       decoration: const BoxDecoration(),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Welcome",
-                                    style: K2DFonts.regular(),
+                          SizedBox(
+                            height: Responsive.heightMultiplier! * 2,
+                          ),
+                          Consumer<HomeController>(
+                            builder: (context, value, _) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Welcome",
+                                      style: K2DFonts.regular(),
+                                    ),
+                                    heightVerySmall,
+                                    Text(
+                                      "${value.name} !!",
+                                      style: K2DFonts.bold(fontSize: 25),
+                                    )
+                                  ],
+                                ),
+                                CircleAvatar(
+                                  radius: 25,
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                        imageUrl: value.photo ?? ""),
                                   ),
-                                  heightVerySmall,
-                                  Consumer<HomeController>(
-                                    builder: (context, value, _) {
-                                      return Text(
-                                        "${value.name} !!",
-                                        style: K2DFonts.bold(fontSize: 25),
-                                      );
-                                    },
-                                  )
-                                ],
-                              ),
-                              const CircleAvatar(
-                                radius: 25,
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -94,8 +102,9 @@ class HomeView extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 30),
                       child: Divider(),
                     ),
-                    heightSmall,
-                    heightSmall,
+                    SizedBox(
+                      height: Responsive.heightMultiplier! * 3,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -103,9 +112,15 @@ class HomeView extends StatelessWidget {
                           "Todo Details",
                           style: K2DFonts.bold(fontSize: 22, color: Apc.black),
                         ),
-                        Text(
-                          "View All",
-                          style: K2DFonts.medium(fontSize: 15, color: Apc.grey),
+                        GestureDetector(
+                          onTap: () {
+                            Routes.pushNonNamed(screen: const ViewALL());
+                          },
+                          child: Text(
+                            "View All",
+                            style:
+                                K2DFonts.medium(fontSize: 15, color: Apc.grey),
+                          ),
                         ),
                       ],
                     ),
@@ -114,45 +129,41 @@ class HomeView extends StatelessWidget {
               ),
             )),
             Expanded(
-                child: CustomContainer(
-              margin: const EdgeInsets.symmetric(horizontal: 5),
-              height: 50,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                  borderRadius:
-                      BorderRadius.only(topLeft: Radius.circular(20))),
-              child: Card(
-                child: CustomContainer(
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Apc.grey)),
-                    height: Responsive.heightMultiplier! * 11,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: const ListTile(
-                        title: TextWidget(
-                          name: 'Name : ',
-                          subTitle: 'sayatnth Athiyadath ',
-                        ),
-                        subtitle: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // const TextWidget(
-                            //   name: 'Age : ',
-                            //   subTitle: 'sayatnth Athiyadath ',
-                            // ),
-                            // heightVerySmall,
-                            // const TextWidget(
-                            //   name: 'Email : ',
-                            //   subTitle: 'sayatnth Athiyadath ',
-                            // ),
-                          ],
-                        ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Consumer<HomeController>(
+                      builder: (context, value, _) => ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Responsive.widthMultiplier! * 1),
+                        itemCount: value.totList.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final data = value.totList[index];
+                          return Card(
+                            elevation: 5,
+                            child: ListTile(
+                              title: TextWidget(
+                                name: 'Name : ',
+                                subTitle: data.name ?? "",
+                              ),
+                              subtitle: TextWidget(
+                                name: 'Age : ',
+                                subTitle: data.age.toString(),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    )),
+                    )
+                  ],
+                ),
               ),
-            ))
+            )
           ],
         ),
       ),

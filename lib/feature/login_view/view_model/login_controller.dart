@@ -24,7 +24,6 @@ class LoginController extends ChangeNotifier {
 
   bool googleAuthLoading = false;
   Future<String> googleSignin(BuildContext context) async {
-    FlutterSecureStorage prefs = const FlutterSecureStorage();
     googleAuthLoading = true;
     notifyListeners();
     try {
@@ -49,7 +48,7 @@ class LoginController extends ChangeNotifier {
       final userDetail = userProfile.user;
 
       await prefs.write(key: 'name', value: userDetail?.displayName ?? "");
-      await prefs.write(key: 'photo', value: userDetail?.photoURL ?? "");
+      // await prefs.write(key: 'photo', value: userDetail?.photoURL ?? "");
       await prefs.write(key: 'email', value: userDetail?.email ?? "");
 
       if (userProfile.additionalUserInfo!.isNewUser == true) {

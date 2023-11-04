@@ -211,7 +211,7 @@ class ProfileView extends StatelessWidget {
                         const Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          "Add Mobile Number",
+                          "Edit Profile",
                           style: TextStyle(
                               color: Color.fromARGB(255, 73, 72, 72),
                               fontSize: 15,

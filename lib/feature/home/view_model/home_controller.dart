@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo/feature/home/model/detail_model.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class HomeController extends ChangeNotifier {
   HomeController() {
     fetchUserData();
+    todoLIstFun();
   }
   String? name;
   String? photo;
@@ -26,6 +28,18 @@ class HomeController extends ChangeNotifier {
       email = emails ?? "loading..";
       notifyListeners();
     }
+    notifyListeners();
+  }
+
+  List<DetailModel> totList = [];
+  Future<void> todoLIstFun() async {
+    totList.clear();
+    QuerySnapshot<Map<String, dynamic>> snapshots =
+        await FirebaseFirestore.instance.collectionGroup('userDetails').get();
+    final list = snapshots.docs
+        .map((docSnap) => DetailModel.fromSnapshot(docSnap))
+        .toList();
+    totList.addAll(list);
     notifyListeners();
   }
 
