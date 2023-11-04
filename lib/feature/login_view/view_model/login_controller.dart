@@ -58,15 +58,16 @@ class LoginController extends ChangeNotifier {
             .set(
               userData.toSnapshot(),
             );
-        await prefs.write(key: 'name', value: userDetail.displayName ?? "");
-        await prefs.write(key: 'photo', value: userDetail.photoURL ?? "");
-        await prefs.write(key: 'email', value: userDetail.email ?? "");
+
         userIdFun(userData.email);
 
         log(userData.toString());
       }
       await prefs.write(key: 'googleauth', value: true.toString());
       await saveUserData();
+      await prefs.write(key: 'name', value: userDetail?.displayName ?? "");
+      await prefs.write(key: 'photo', value: userDetail?.photoURL ?? "");
+      await prefs.write(key: 'email', value: userDetail?.email ?? "");
       Routes.pushReplaceNonNamed(screen: const BottomNavigationCustom());
       return Future.value('');
     } on FirebaseAuthException catch (ex) {
