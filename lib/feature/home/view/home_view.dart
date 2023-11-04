@@ -3,6 +3,7 @@ import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/custom_size/custom_size.dart';
 import 'package:firebase_todo/core/google_fonts/google_fonts.dart';
+import 'package:firebase_todo/feature/home/view/widget/overview.dart';
 import 'package:firebase_todo/feature/home/view/widget/view_all.dart';
 import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
 import 'package:firebase_todo/responsive/responsive.dart';
@@ -158,16 +159,22 @@ class HomeView extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 final data = value.totList[index];
-                                return Card(
-                                  elevation: 5,
-                                  child: ListTile(
-                                    title: TextWidget(
-                                      name: 'Name : ',
-                                      subTitle: data.name ?? "",
-                                    ),
-                                    subtitle: TextWidget(
-                                      name: 'Age : ',
-                                      subTitle: data.age.toString(),
+                                return GestureDetector(
+                                  onTap: () {
+                                    Routes.pushNonNamed(
+                                        screen: OverView(data: data));
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    child: ListTile(
+                                      title: TextWidget(
+                                        name: 'Name : ',
+                                        subTitle: data.name ?? "",
+                                      ),
+                                      subtitle: TextWidget(
+                                        name: 'Age : ',
+                                        subTitle: data.age.toString(),
+                                      ),
                                     ),
                                   ),
                                 );
@@ -204,7 +211,7 @@ class TextWidget extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             name,
-            style: K2DFonts.medium(),
+            style: K2DFonts.bold(),
           ),
         ),
         Expanded(
