@@ -91,7 +91,7 @@ class AddUserDetails extends StatelessWidget {
             onPressed: () async {
               if (data.todoAdding.currentState!.validate()) {
                 await homePro.addToCollection(context).whenComplete(() async {
-                  await homePro.todoLIstFun();
+                  await homePro.todoListFun();
                 });
               }
             },

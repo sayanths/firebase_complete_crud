@@ -12,7 +12,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 class HomeController extends ChangeNotifier {
   HomeController() {
     fetchUserData();
-    todoLIstFun();
+    todoListFun();
   }
   String? name;
   String? photo;
@@ -34,15 +34,28 @@ class HomeController extends ChangeNotifier {
   }
 
   List<DetailModel> totList = [];
-  Future<void> todoLIstFun() async {
+
+  Future<void> todoListFun() async {
     totList.clear();
-    QuerySnapshot<Map<String, dynamic>> snapshots =
-        await FirebaseFirestore.instance.collectionGroup('userDetails').get();
-    final list = snapshots.docs
-        .map((docSnap) => DetailModel.fromSnapshot(docSnap))
-        .toList();
-    totList.addAll(list);
-    notifyListeners();
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final QuerySnapshot<Map<String, dynamic>> snapshots =
+          await FirebaseFirestore.instance
+              .collection('userProfile')
+              .doc(user.uid)
+              .collection('userDetails')
+              .get();
+
+      final list = snapshots.docs
+          .map((docSnap) => DetailModel.fromSnapshot(docSnap))
+          .toList();
+      totList.addAll(list);
+      notifyListeners();
+    } else {
+      // Handle the case where the user is not authenticated
+      // You can show an error message or navigate the user to the login screen.
+    }
   }
 
   List<String> categoryList = [
@@ -64,51 +77,53 @@ class HomeController extends ChangeNotifier {
 
   bool isDataAdding = false;
   Future<void> addToCollection(BuildContext context) async {
-    isDataAdding == true;
+    isDataAdding = true;
     notifyListeners();
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
     final User? user = FirebaseAuth.instance.currentUser;
-    final DocumentReference userProfileRef =
-        firestore.collection('userProfile').doc(user?.uid);
-    final CollectionReference uderDetails =
-        userProfileRef.collection('userDetails');
-    Map<String, dynamic> data = {
-      "id": uderDetails.id,
-      "name": nameField.text.trim(),
-      "email": emailField.text.trim().toLowerCase(),
-      "age": int.tryParse(
-        ageField.text,
-      ),
-      "number": int.tryParse(
-        numnerField.text,
-      ),
-    };
-    log(data.toString());
-    await uderDetails.add(data).then((value) {
-      isDataAdding == false;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    if (user != null) {
+      final DocumentReference userProfileRef =
+          firestore.collection('userProfile').doc(user.uid);
+      final CollectionReference userDetails =
+          userProfileRef.collection('userDetails');
+
+      Map<String, dynamic> data = {
+        "name": nameField.text.trim(),
+        "email": emailField.text.trim().toLowerCase(),
+        "age": int.tryParse(ageField.text),
+        "number": int.tryParse(numnerField.text),
+      };
+
+      log(data.toString());
+      await userDetails.add(data).then((value) {
+        isDataAdding = false;
+        notifyListeners();
+        onClear();
+        Routes.back();
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.success(
+            message: 'Item added to collection successfully!',
+          ),
+        );
+      }).catchError((error) {
+        isDataAdding = false;
+        notifyListeners();
+        showTopSnackBar(
+          Overlay.of(context),
+          CustomSnackBar.error(
+            message: "Failed to add item to collection: $error",
+          ),
+        );
+      });
+    } else {
+      // Handle the case where the user is not authenticated
+      isDataAdding = false;
       notifyListeners();
-      onClear();
-      Routes.back();
-      showTopSnackBar(
-        // ignore: use_build_context_synchronously
-        Overlay.of(context),
-        const CustomSnackBar.success(
-          message: 'Item added to collection successfully!',
-        ),
-      );
-    }).catchError((error) {
-      isDataAdding == false;
-      notifyListeners();
-      showTopSnackBar(
-        // ignore: use_build_context_synchronously
-        Overlay.of(context),
-        CustomSnackBar.error(
-          message: "Failed to add item to collection: $error",
-        ),
-      );
-    });
-    isDataAdding == false;
-    notifyListeners();
+      // You can show an error message or navigate the user to the login screen.
+    }
   }
 
   String? validateName(String? value) {

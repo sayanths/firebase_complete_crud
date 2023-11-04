@@ -16,7 +16,7 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<HomeController>().todoLIstFun();
+    context.read<HomeController>().todoListFun();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
@@ -158,7 +158,8 @@ class HomeView extends StatelessWidget {
                               itemCount: value.totList.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
-                                final data = value.totList[index];
+                                final data =
+                                    value.totList.reversed.toList()[index];
                                 return GestureDetector(
                                   onTap: () {
                                     Routes.pushNonNamed(
