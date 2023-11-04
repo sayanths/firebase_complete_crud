@@ -5,13 +5,13 @@ class DetailModel {
   final String? email;
   final int? number;
   final int? age;
-  
-
+  final String? id;
   DetailModel({
     this.name,
     this.email,
     this.number,
     this.age,
+    this.id,
   });
 
   factory DetailModel.fromSnapshot(
@@ -21,6 +21,7 @@ class DetailModel {
       email: snap.data()?['email'],
       number: snap.data()?['number'],
       age: snap.data()?['age'],
+      id: snap.data()?['id'],
     );
   }
 
@@ -30,6 +31,7 @@ class DetailModel {
       "email": email,
       "number": number,
       "age": age,
+      "id": id,
     };
   }
 }

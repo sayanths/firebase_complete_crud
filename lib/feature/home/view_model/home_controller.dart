@@ -6,6 +6,8 @@ import 'package:firebase_todo/feature/home/model/detail_model.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class HomeController extends ChangeNotifier {
   HomeController() {
@@ -61,16 +63,17 @@ class HomeController extends ChangeNotifier {
   TextEditingController get numnerField => _numnerField;
 
   bool isDataAdding = false;
-  Future<void> addToCollection() async {
+  Future<void> addToCollection(BuildContext context) async {
     isDataAdding == true;
     notifyListeners();
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final User? user = FirebaseAuth.instance.currentUser;
     final DocumentReference userProfileRef =
         firestore.collection('userProfile').doc(user?.uid);
-    final CollectionReference carsCollectionRef =
+    final CollectionReference uderDetails =
         userProfileRef.collection('userDetails');
     Map<String, dynamic> data = {
+      "id": uderDetails.id,
       "name": nameField.text.trim(),
       "email": emailField.text.trim().toLowerCase(),
       "age": int.tryParse(
@@ -81,16 +84,28 @@ class HomeController extends ChangeNotifier {
       ),
     };
     log(data.toString());
-    await carsCollectionRef.add(data).then((value) {
+    await uderDetails.add(data).then((value) {
       isDataAdding == false;
       notifyListeners();
       onClear();
       Routes.back();
-      log("Item added to collection successfully!");
+      showTopSnackBar(
+        // ignore: use_build_context_synchronously
+        Overlay.of(context),
+        const CustomSnackBar.success(
+          message: 'Item added to collection successfully!',
+        ),
+      );
     }).catchError((error) {
       isDataAdding == false;
       notifyListeners();
-      log("Failed to add item to collection: $error");
+      showTopSnackBar(
+        // ignore: use_build_context_synchronously
+        Overlay.of(context),
+        CustomSnackBar.error(
+          message: "Failed to add item to collection: $error",
+        ),
+      );
     });
     isDataAdding == false;
     notifyListeners();

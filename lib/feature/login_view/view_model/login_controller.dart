@@ -42,15 +42,8 @@ class LoginController extends ChangeNotifier {
           idToken: cred.idToken,
         ),
       );
-
       FlutterSecureStorage prefs = const FlutterSecureStorage();
-
       final userDetail = userProfile.user;
-
-      await prefs.write(key: 'name', value: userDetail?.displayName ?? "");
-      // await prefs.write(key: 'photo', value: userDetail?.photoURL ?? "");
-      await prefs.write(key: 'email', value: userDetail?.email ?? "");
-
       if (userProfile.additionalUserInfo!.isNewUser == true) {
         final userData = UserModel(
           name: userDetail!.displayName.toString(),
@@ -59,12 +52,15 @@ class LoginController extends ChangeNotifier {
           verified: userDetail.emailVerified,
           id: userDetail.uid,
         );
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('userProfile')
             .doc(userDetail.email)
             .set(
               userData.toSnapshot(),
             );
+        await prefs.write(key: 'name', value: userDetail.displayName ?? "");
+        await prefs.write(key: 'photo', value: userDetail.photoURL ?? "");
+        await prefs.write(key: 'email', value: userDetail.email ?? "");
         userIdFun(userData.email);
 
         log(userData.toString());
@@ -72,7 +68,6 @@ class LoginController extends ChangeNotifier {
       await prefs.write(key: 'googleauth', value: true.toString());
       await saveUserData();
       Routes.pushReplaceNonNamed(screen: const BottomNavigationCustom());
-
       return Future.value('');
     } on FirebaseAuthException catch (ex) {
       googleAuthLoading = false;

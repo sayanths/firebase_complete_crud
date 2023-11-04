@@ -136,29 +136,43 @@ class HomeView extends StatelessWidget {
                       height: 20,
                     ),
                     Consumer<HomeController>(
-                      builder: (context, value, _) => ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Responsive.widthMultiplier! * 1),
-                        itemCount: value.totList.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final data = value.totList[index];
-                          return Card(
-                            elevation: 5,
-                            child: ListTile(
-                              title: TextWidget(
-                                name: 'Name : ',
-                                subTitle: data.name ?? "",
+                      builder: (context, value, _) => value.totList.isEmpty
+                          ? Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: Responsive.heightMultiplier! * 15,
+                                  ),
+                                  Text(
+                                    "No Data found",
+                                    style: K2DFonts.regular(),
+                                  ),
+                                ],
                               ),
-                              subtitle: TextWidget(
-                                name: 'Age : ',
-                                subTitle: data.age.toString(),
-                              ),
+                            )
+                          : ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Responsive.widthMultiplier! * 1),
+                              itemCount: value.totList.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                final data = value.totList[index];
+                                return Card(
+                                  elevation: 5,
+                                  child: ListTile(
+                                    title: TextWidget(
+                                      name: 'Name : ',
+                                      subTitle: data.name ?? "",
+                                    ),
+                                    subtitle: TextWidget(
+                                      name: 'Age : ',
+                                      subTitle: data.age.toString(),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     )
                   ],
                 ),

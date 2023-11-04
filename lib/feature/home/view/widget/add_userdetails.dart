@@ -79,16 +79,20 @@ class AddUserDetails extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Consumer<HomeController>(
           builder: (context, homePro, _) => PlatformButton(
-            text: Text(
-              'Submit',
-              style: K2DFonts.bold(fontSize: 18),
-            ),
+            text: homePro.isDataAdding == true
+                ? const CircularProgressIndicator()
+                : Text(
+                    'Submit',
+                    style: K2DFonts.bold(fontSize: 18),
+                  ),
             color: Apc.primary,
             width: Responsive.widthMultiplier! * 83,
             height: Responsive.heightMultiplier! * 5,
             onPressed: () async {
               if (data.todoAdding.currentState!.validate()) {
-                await homePro.addToCollection();
+                await homePro.addToCollection(context).whenComplete(() async {
+                  await homePro.todoLIstFun();
+                });
               }
             },
           ),
