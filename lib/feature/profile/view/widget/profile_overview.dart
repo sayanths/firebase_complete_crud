@@ -10,6 +10,7 @@ import 'package:firebase_todo/responsive/responsive.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/custom_size/custom_size.dart';
 import '../../../home/view/home_view.dart';
@@ -91,21 +92,67 @@ class OverViewProfileView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             heightSmall,
-            Hero(
-              tag: 'profile',
-              child: CustomContainer(
-                height: Responsive.heightMultiplier! * 20,
-                width: Responsive.widthMultiplier! * 40,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2, color: Apc.white),
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(data.photo ?? ""),
-                    fit: BoxFit.cover,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Hero(
+                  tag: 'profile',
+                  child: CustomContainer(
+                    height: Responsive.heightMultiplier! * 20,
+                    width: Responsive.widthMultiplier! * 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 2, color: Apc.white),
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(data.photo ?? ""),
+                        fit: BoxFit.cover,
+                      ),
+                      color: Apc.grey,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  color: Apc.grey,
-                  borderRadius: BorderRadius.circular(8),
                 ),
-              ),
+                Visibility(
+                  visible: data.profileList[0].instaLink == null ? false : true,
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (await canLaunchUrl(Uri.parse(
+                        data.profileList[0].instaLink ?? "",
+                      ))) {
+                        await launchUrl(Uri.parse(
+                          data.profileList[0].instaLink ?? "",
+                        ));
+                      } else {
+                        throw 'Could not launch';
+                      }
+                    },
+                    child: Image.asset(
+                      'assets/instagram.png',
+                      height: 45,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: data.profileList[0].fblink == null ? false : true,
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (await canLaunchUrl(Uri.parse(
+                        data.profileList[0].fblink ?? "",
+                      ))) {
+                        await launchUrl(Uri.parse(
+                          data.profileList[0].fblink ?? "",
+                        ));
+                      } else {
+                        throw 'Could not launch';
+                      }
+                    },
+                    child: Image.asset(
+                      'assets/fb.png',
+                      height: 45,
+                    ),
+                  ),
+                )
+              ],
             ),
             heightSmall,
             const Divider(),

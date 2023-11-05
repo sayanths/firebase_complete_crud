@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_todo/feature/bottom_nav/view/bottom_nav.dart';
@@ -152,20 +154,21 @@ class ProfileProvider extends ChangeNotifier {
         "city": city.text.trim().toLowerCase(),
         "pin": pincode.text.trim().toLowerCase(),
         "instaLink": instaLink.text.trim(),
-        "fbLink": faceBookLink.text.trim(),
+        "fblink": faceBookLink.text.trim(),
       };
-      print(data.toString());
+      log(data.toString());
       final docSnapshot = await userProfileRef.get();
       if (docSnapshot.exists) {
         await userProfileRef.update(data).then((value) async {
           updateLoading = false;
           notifyListeners();
-
+          await profile();
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => const BottomNavigationCustom(),
           ));
           showTopSnackBar(
+            // ignore: use_build_context_synchronously
             Overlay.of(context),
             const CustomSnackBar.success(
               message: 'Profile Updated Sucessfully!!',
@@ -173,7 +176,6 @@ class ProfileProvider extends ChangeNotifier {
           );
         }).catchError((error) {
           updateLoading = false;
-          notifyListeners();
           notifyListeners();
           showTopSnackBar(
             Overlay.of(context),

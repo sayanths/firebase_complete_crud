@@ -74,11 +74,23 @@ class ProfileEditView extends StatelessWidget {
                 textInputType: TextInputType.number,
               ),
               CustomTextField(
+                validate: (val) {
+                  if (!homeData.isLink(val)) {
+                    return "Please enter a valid URL";
+                  }
+                  return null;
+                },
                 controller: homeData.instaLink,
                 title: 'Instagram Link',
                 textInputType: TextInputType.name,
               ),
               CustomTextField(
+                validate: (val) {
+                  if (!homeData.isLink(val)) {
+                    return "Please enter a valid URL";
+                  }
+                  return null;
+                },
                 controller: homeData.faceBookLink,
                 title: 'Facebook Link',
                 textInputType: TextInputType.name,
@@ -100,12 +112,8 @@ class ProfileEditView extends StatelessWidget {
               width: Responsive.widthMultiplier! * 83,
               height: Responsive.heightMultiplier! * 5,
               onPressed: () async {
-                await homePro
-                    .updateProfile(
-                        context, homeData.profileList[0].email.toString())
-                    .whenComplete(() async {
-                  return await homePro.fetchUserData();
-                });
+                await homePro.updateProfile(
+                    context, homeData.profileList[0].email.toString());
               }),
         ),
       ),
