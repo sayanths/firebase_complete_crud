@@ -9,10 +9,11 @@ import 'package:firebase_todo/feature/login_view/view_model/login_controller.dar
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../core/color/color.dart';
 import '../../../responsive/responsive.dart';
-import '../../bottom_nav/view/bottom_nav.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -74,9 +75,12 @@ class LoginView extends StatelessWidget {
                     width: Responsive.widthMultiplier! * 83,
                     height: Responsive.heightMultiplier! * 5,
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const BottomNavigationCustom(),
-                      ));
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        const CustomSnackBar.error(
+                          message: 'Only Google login is working',
+                        ),
+                      );
                     },
                   ),
                   heightSmall,
@@ -141,7 +145,9 @@ class GoogleLoginWidget extends StatelessWidget {
                 border: Border.all(color: Apc.white)),
             child: Consumer<LoginController>(
               builder: (context, value, _) => value.googleAuthLoading == true
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(
+                      color: Apc.black,
+                    )
                   : Row(
                       children: [
                         const Spacer(),
