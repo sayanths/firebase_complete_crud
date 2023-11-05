@@ -44,7 +44,6 @@ class HomeController extends ChangeNotifier {
   Future<void> todoListFun() async {
     totList.clear();
     final User? user = FirebaseAuth.instance.currentUser;
-
     if (user != null) {
       final QuerySnapshot<Map<String, dynamic>> snapshots =
           await FirebaseFirestore.instance
@@ -52,16 +51,16 @@ class HomeController extends ChangeNotifier {
               .doc(user.uid)
               .collection('userDetails')
               .get();
+      final set = <DetailModel>{};
+      for (var docSnap in snapshots.docs) {
+        final detailModel = DetailModel.fromSnapshot(docSnap);
+        set.add(detailModel);
+      }
+      final list = set.toList();
 
-      final list = snapshots.docs
-          .map((docSnap) => DetailModel.fromSnapshot(docSnap))
-          .toList();
       totList.addAll(list);
       notifyListeners();
-    } else {
-      // Handle the case where the user is not authenticated
-      // You can show an error message or navigate the user to the login screen.
-    }
+    } else {}
   }
 
   List<String> categoryList = [
@@ -140,7 +139,7 @@ class HomeController extends ChangeNotifier {
         final DocumentReference docRef = userDetails.doc(editId);
         final docSnapshot = await docRef.get();
         if (docSnapshot.exists) {
-          await docRef.set(data, SetOptions(merge: true)).then((value) async {
+          await docRef.update(data).then((value) async {
             log("data is $data");
             editingData == false;
             notifyListeners();
