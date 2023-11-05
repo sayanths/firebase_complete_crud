@@ -113,7 +113,7 @@ class OverViewProfileView extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: data.profileList[0].instaLink == null ? false : true,
+                  visible: data.profileList.isEmpty ? false : true,
                   child: GestureDetector(
                     onTap: () async {
                       if (await canLaunchUrl(Uri.parse(
@@ -133,7 +133,7 @@ class OverViewProfileView extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: data.profileList[0].fblink == null ? false : true,
+                  visible: data.profileList.isEmpty ? false : true,
                   child: GestureDetector(
                     onTap: () async {
                       if (await canLaunchUrl(Uri.parse(

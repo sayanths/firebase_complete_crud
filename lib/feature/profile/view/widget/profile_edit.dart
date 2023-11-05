@@ -112,8 +112,7 @@ class ProfileEditView extends StatelessWidget {
               width: Responsive.widthMultiplier! * 83,
               height: Responsive.heightMultiplier! * 5,
               onPressed: () async {
-                await homePro.updateProfile(
-                    context, homeData.profileList[0].email.toString());
+                await homePro.updateProfile(context, data.email.toString());
               }),
         ),
       ),

@@ -62,34 +62,36 @@ class AddUserDetails extends StatelessWidget {
         },
         child: Form(
           key: homeData.todoAdding,
-          child: Column(
-            children: [
-              heightMedium,
-              CustomTextField(
-                controller: homeData.nameField,
-                validate: (val) => homeData.validateName(val),
-                title: 'Name',
-                textInputType: TextInputType.name,
-              ),
-              CustomTextField(
-                validate: (val) => homeData.validateEmail(val),
-                controller: homeData.emailField,
-                title: 'Email',
-                textInputType: TextInputType.emailAddress,
-              ),
-              CustomTextField(
-                validate: (val) => homeData.validateAge(val),
-                controller: homeData.ageField,
-                title: 'Age',
-                textInputType: TextInputType.number,
-              ),
-              CustomTextField(
-                validate: (val) => homeData.validatePhoneNumber(val),
-                controller: homeData.numnerField,
-                title: 'Number',
-                textInputType: TextInputType.phone,
-              )
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                heightMedium,
+                CustomTextField(
+                  controller: homeData.nameField,
+                  validate: (val) => homeData.validateName(val),
+                  title: 'Name',
+                  textInputType: TextInputType.name,
+                ),
+                CustomTextField(
+                  validate: (val) => homeData.validateEmail(val),
+                  controller: homeData.emailField,
+                  title: 'Email',
+                  textInputType: TextInputType.emailAddress,
+                ),
+                CustomTextField(
+                  validate: (val) => homeData.validateAge(val),
+                  controller: homeData.ageField,
+                  title: 'Age',
+                  textInputType: TextInputType.number,
+                ),
+                CustomTextField(
+                  validate: (val) => homeData.validatePhoneNumber(val),
+                  controller: homeData.numnerField,
+                  title: 'Number',
+                  textInputType: TextInputType.phone,
+                )
+              ],
+            ),
           ),
         ),
       ),
