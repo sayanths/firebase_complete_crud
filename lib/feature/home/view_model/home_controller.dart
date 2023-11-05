@@ -167,8 +167,7 @@ class HomeController extends ChangeNotifier {
             );
           });
         } else {
-          // Handle the case where the document does not exist
-          print('Document with ID $editId does not exist.');
+          log('Document with ID $editId does not exist.');
         }
       }
     } else {

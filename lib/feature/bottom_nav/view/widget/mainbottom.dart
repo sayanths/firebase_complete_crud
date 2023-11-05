@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:firebase_todo/feature/bottom_nav/view/widget/button_view.dart';
 import 'package:firebase_todo/feature/bottom_nav/view/widget/model.dart';
 import 'package:flutter/material.dart';

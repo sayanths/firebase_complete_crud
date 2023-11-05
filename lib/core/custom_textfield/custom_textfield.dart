@@ -20,6 +20,7 @@ class CustomPaddingTextfield extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomPaddingTextfieldState createState() => _CustomPaddingTextfieldState();
 }
 
@@ -120,6 +121,7 @@ class CustomTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomTextFieldState createState() => _CustomTextFieldState();
 }
 

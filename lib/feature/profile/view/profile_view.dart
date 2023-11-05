@@ -218,13 +218,6 @@ class ProfileView extends StatelessWidget {
                 height: Responsive.heightMultiplier! * 9,
               ),
               ProfilePageListTile(
-                icon: IconlyBold.activity,
-                title: "My Posts",
-                function: () {
-                  Routes.push(screen: '/myPosts');
-                },
-              ),
-              ProfilePageListTile(
                 icon: IconlyBold.paper,
                 title: "Complaint Box",
                 function: () {
