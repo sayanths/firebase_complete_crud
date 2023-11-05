@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/custom_textfield/custom_textfield.dart';
@@ -111,6 +110,8 @@ class ProfileView extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () {
+                            FlutterSecureStorage prefs =
+                                const FlutterSecureStorage();
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -125,13 +126,11 @@ class ProfileView extends StatelessWidget {
                                         TextButton(
                                           child: const Text("Yes"),
                                           onPressed: () async {
-                                            FlutterSecureStorage prefs =
-                                                const FlutterSecureStorage();
-                                            await FirebaseAuth.instance
-                                                .signOut();
-                                            await prefs.deleteAll();
-                                            Routes.pushRemoveUntilNonNamed(
-                                                const LoginView());
+                                            await prefs
+                                                .deleteAll()
+                                                .whenComplete(() => Routes
+                                                    .pushRemoveUntilNonNamed(
+                                                        const LoginView()));
                                           },
                                         ),
                                         TextButton(

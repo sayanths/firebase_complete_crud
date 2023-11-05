@@ -9,7 +9,7 @@ class WithDraw extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          "WithDraw View",
+          "History View",
           style: K2DFonts.bold(),
         ),
       ),
