@@ -82,8 +82,5 @@ class LoginController extends ChangeNotifier {
     obj.setBool('userLoged', true);
   }
 
-  logoutUser() async {
-    await FirebaseAuth.instance.signOut();
-    notifyListeners();
-  }
+ 
 }

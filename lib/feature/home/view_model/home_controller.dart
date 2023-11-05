@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo/feature/bottom_nav/view/bottom_nav.dart';
 import 'package:firebase_todo/feature/home/model/detail_model.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +83,9 @@ class HomeController extends ChangeNotifier {
   String? id = '';
   bool isDataAdding = false;
   bool editingData = false;
-  Future<void> addToCollection(BuildContext context, AddEditMode mode) async {
+
+  Future<void> addToCollection(BuildContext context, AddEditMode mode,
+      [String? editId]) async {
     mode == AddEditMode.add ? isDataAdding = true : editingData == true;
 
     notifyListeners();
@@ -91,21 +96,22 @@ class HomeController extends ChangeNotifier {
     if (user != null) {
       final DocumentReference userProfileRef =
           firestore.collection('userProfile').doc(user.uid);
-      final CollectionReference userDetails =
-          userProfileRef.collection('userDetails');
-      id = userDetails.id;
-      notifyListeners();
+      String customDocumentId =
+          DateTime.now().microsecondsSinceEpoch.toString();
+
+      final DocumentReference userDetails =
+          userProfileRef.collection('userDetails').doc(customDocumentId);
+
       Map<String, dynamic> data = {
-        "id": userDetails.id,
+        "id": mode == AddEditMode.edit ? editId : customDocumentId,
         "name": nameField.text.trim(),
         "email": emailField.text.trim().toLowerCase(),
-        "age": int.tryParse(ageField.text),
+        "age": int.tryParse(ageField.text.trim()),
         "number": int.tryParse(numnerField.text.trim()),
       };
 
       if (mode == AddEditMode.add) {
-        // Adding a new item
-        await userDetails.add(data).then((value) {
+        await userDetails.set(data).then((value) {
           mode == AddEditMode.add ? isDataAdding = false : editingData == false;
           notifyListeners();
           onClear();
@@ -119,42 +125,88 @@ class HomeController extends ChangeNotifier {
         }).catchError((error) {
           isDataAdding = false;
           notifyListeners();
+          log(error.toString());
           showTopSnackBar(
             Overlay.of(context),
             CustomSnackBar.error(
-              message: "Failed to add item to collection: $error",
+              message: "$error",
             ),
           );
         });
       } else if (mode == AddEditMode.edit) {
-        // Editing an existing item
-        await userDetails.doc(id).update(data).then((value) {
-          editingData == false;
-          notifyListeners();
-          Routes.back();
-          showTopSnackBar(
-            Overlay.of(context),
-            const CustomSnackBar.success(
-              message: 'Item updated successfully!',
-            ),
-          );
-        }).catchError((error) {
-          editingData = false;
-          notifyListeners();
-          showTopSnackBar(
-            Overlay.of(context),
-            CustomSnackBar.error(
-              message: "Failed to update item in collection: $error",
-            ),
-          );
-        });
+        final CollectionReference userDetails =
+            userProfileRef.collection('userDetails');
+        log("message $editId");
+        final DocumentReference docRef = userDetails.doc(editId);
+        final docSnapshot = await docRef.get();
+        if (docSnapshot.exists) {
+          await docRef.set(data, SetOptions(merge: true)).then((value) async {
+            log("data is $data");
+            editingData == false;
+            notifyListeners();
+
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const BottomNavigationCustom(),
+            ));
+            showTopSnackBar(
+              Overlay.of(context),
+              const CustomSnackBar.success(
+                message: 'Item updated successfully!',
+              ),
+            );
+          }).catchError((error) {
+            // Handle update error
+            log("error is $error");
+            editingData = false;
+            notifyListeners();
+            log(error.toString());
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(
+                message: "$error",
+              ),
+            );
+          });
+        } else {
+          // Handle the case where the document does not exist
+          print('Document with ID $editId does not exist.');
+        }
       }
     } else {
-      // Handle the case where the user is not authenticated
       isDataAdding = false;
       editingData = false;
       notifyListeners();
-      // You can show an error message or navigate the user to the login screen.
+    }
+  }
+
+  Future<void> delete(String deleteId, BuildContext context) async {
+    try {
+      log("message");
+
+      final User? user = FirebaseAuth.instance.currentUser;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final DocumentReference userProfileRef =
+          firestore.collection('userProfile').doc(user?.uid);
+
+      final CollectionReference userDetails =
+          userProfileRef.collection('userDetails');
+
+      final newDocumentRef = userDetails.doc();
+
+      id = newDocumentRef.id;
+
+      await userDetails.doc(deleteId).delete().whenComplete(() async {
+        await todoListFun();
+        Routes.back();
+      });
+    } catch (e) {
+      log("s");
+      showTopSnackBar(
+        Overlay.of(context),
+        CustomSnackBar.error(
+          message: "$e",
+        ),
+      );
     }
   }
 

@@ -60,7 +60,7 @@ class HomeView extends StatelessWidget {
                                     heightVerySmall,
                                     Text(
                                       "${value.name} !!",
-                                      style: K2DFonts.bold(fontSize: 25),
+                                      style: K2DFonts.bold(fontSize: 18),
                                     )
                                   ],
                                 ),
@@ -84,7 +84,7 @@ class HomeView extends StatelessWidget {
                     heightVerySmall,
                     Consumer<HomeController>(
                       builder: (context, homePro, _) => LimitedBox(
-                        maxHeight: Responsive.heightMultiplier! * 10,
+                        maxHeight: Responsive.heightMultiplier! * 8,
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: homePro.categoryList.length,
@@ -161,6 +161,59 @@ class HomeView extends StatelessWidget {
                                 final data =
                                     value.totList.reversed.toList()[index];
                                 return GestureDetector(
+                                  onLongPress: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            "Delete ? ",
+                                            style: K2DFonts.bold(fontSize: 18),
+                                          ),
+                                          content: Text(
+                                            "Do you want to delete ? ",
+                                            style:
+                                                K2DFonts.medium(fontSize: 15),
+                                          ),
+                                          actions: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                MaterialButton(
+                                                  color: const Color.fromARGB(
+                                                      255, 0, 81, 5),
+                                                  child: Text(
+                                                    "Delete",
+                                                    style: K2DFonts.medium(
+                                                        color: Apc.white),
+                                                  ),
+                                                  onPressed: () async {
+                                                    value.delete(
+                                                        data.id ?? "", context);
+                                                  },
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                MaterialButton(
+                                                  color: Apc.red,
+                                                  child: Text(
+                                                    "Cancel",
+                                                    style: K2DFonts.medium(
+                                                        color: Apc.white),
+                                                  ),
+                                                  onPressed: () {
+                                                    Routes.back();
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                   onTap: () {
                                     Routes.pushNonNamed(
                                         screen: OverView(data: data));

@@ -29,7 +29,7 @@ class OverView extends StatelessWidget {
             builder: (context, value, _) => IconButton(
                 onPressed: () {
                   Routes.pushNonNamed(
-                      screen: AddUserDetails(mode: AddEditMode.edit));
+                      screen:  AddUserDetails(mode: AddEditMode.edit,data:data));
                 },
                 icon: const Icon(
                   Icons.edit,
