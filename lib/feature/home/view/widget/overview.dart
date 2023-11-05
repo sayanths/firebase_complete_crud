@@ -61,7 +61,7 @@ class OverView extends StatelessWidget {
             ),
             heightSmall,
             TextWidget(
-              name: 'Number : ',
+              name: 'Email : ',
               subTitle: data.email.toString(),
             ),
           ],

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_todo/feature/splash_view/view_model/splash_controller.dart';
 
 import '../feature/bottom_nav/controller/bottom_controller.dart';
+import '../feature/profile/view_model/profile_provider.dart';
 
 class ProviderApp extends StatelessWidget {
   final Widget child;
@@ -23,8 +24,11 @@ class ProviderApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => CustomBottomNavController(),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => LoginController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ProfileProvider(),
         ),
       ],
       child: child,

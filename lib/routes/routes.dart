@@ -1,4 +1,3 @@
-import 'package:firebase_todo/feature/home/model/detail_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_todo/feature/login_view/view/login_view.dart';
 

@@ -5,6 +5,7 @@ import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/custom_textfield/custom_textfield.dart';
 import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
 import 'package:firebase_todo/feature/login_view/view/login_view.dart';
+import 'package:firebase_todo/feature/profile/view/widget/profile_overview.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -35,18 +36,27 @@ class ProfileView extends StatelessWidget {
                     bottom: -60,
                     left: 15,
                     child: Consumer<HomeController>(
-                      builder: (context, value, _) => CustomContainer(
-                        height: Responsive.heightMultiplier! * 20,
-                        width: Responsive.widthMultiplier! * 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 3, color: Apc.white),
-                          image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                value.photo ?? "",
-                              ),
-                              fit: BoxFit.cover),
-                          color: Apc.grey,
-                          borderRadius: BorderRadius.circular(8),
+                      builder: (context, value, _) => GestureDetector(
+                        onTap: () {
+                          Routes.pushNonNamed(
+                              screen: OverViewProfileView(data: value));
+                        },
+                        child: Hero(
+                          tag: 'profile',
+                          child: CustomContainer(
+                            height: Responsive.heightMultiplier! * 20,
+                            width: Responsive.widthMultiplier! * 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 3, color: Apc.white),
+                              image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                    value.photo ?? "",
+                                  ),
+                                  fit: BoxFit.cover),
+                              color: Apc.grey,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -89,16 +99,6 @@ class ProfileView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   right: Responsive.textMultiplier! * 1,
-                  //   bottom: Responsive.textMultiplier! * 2.5,
-                  //   child: Text(
-                  //     maxLines: 1,
-                  //     overflow: TextOverflow.ellipsis,
-                  //     value.email.toString(),
-                  //     style: const TextStyle(color: Apc.white, fontSize: 10),
-                  //   ),
-                  // ),
                   Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: Responsive.heightMultiplier! * 5,

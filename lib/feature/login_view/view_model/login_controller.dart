@@ -7,12 +7,8 @@ import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends ChangeNotifier {
-//   final FirebaseAuth _auth;
-//  LoginController(this._auth);
-
   final FirebaseAuth _ath = FirebaseAuth.instance;
 
   var email = '';
@@ -64,7 +60,6 @@ class LoginController extends ChangeNotifier {
         log(userData.toString());
       }
       await prefs.write(key: 'googleauth', value: true.toString());
-      await saveUserData();
       await prefs.write(key: 'name', value: userDetail?.displayName ?? "");
       await prefs.write(key: 'photo', value: userDetail?.photoURL ?? "");
       await prefs.write(key: 'email', value: userDetail?.email ?? "");
@@ -76,11 +71,4 @@ class LoginController extends ChangeNotifier {
       return Future.value(ex.message);
     }
   }
-
-  saveUserData() async {
-    final obj = await SharedPreferences.getInstance();
-    obj.setBool('userLoged', true);
-  }
-
- 
 }
