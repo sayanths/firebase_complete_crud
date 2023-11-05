@@ -5,10 +5,10 @@ import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_size/custom_size.dart';
 import 'package:firebase_todo/core/custom_textfield/custom_textfield.dart';
 import 'package:firebase_todo/core/google_fonts/google_fonts.dart';
-import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
 import 'package:firebase_todo/feature/profile/view_model/profile_provider.dart';
 import 'package:firebase_todo/responsive/responsive.dart';
 import 'package:firebase_todo/routes/routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,21 +22,21 @@ class ProfileEditView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeData = context.watch<ProfileProvider>();
-
-    data.emailField.text = homeData.profileList[0].email;
-    data.nameField.text = homeData.profileList[0].name;
-    data.city.text = homeData.profileList[0].city ?? "";
-    data.pincode.text = homeData.profileList[0].pin == null
-        ? ""
-        : homeData.profileList[0].pin.toString();
-    data.faceBookLink.text = homeData.profileList[0].fblink ?? "";
-    data.instaLink.text = homeData.profileList[0].instaLink ?? "";
+    if (homeData.profileList.isNotEmpty) {
+      data.city.text = homeData.profileList[0].city ?? "";
+      data.pincode.text = homeData.profileList[0].pin == null
+          ? ""
+          : homeData.profileList[0].pin.toString();
+      data.faceBookLink.text = homeData.profileList[0].fblink ?? "";
+      data.instaLink.text = homeData.profileList[0].instaLink ?? "";
+    }
 
     return Scaffold(
       backgroundColor: Apc.white,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
+              data.onClear();
               Routes.back();
             },
             icon: Icon(
@@ -52,6 +52,7 @@ class ProfileEditView extends StatelessWidget {
       ),
       body: WillPopScope(
         onWillPop: () async {
+          data.onClear();
           Routes.back();
           return true;
         },
@@ -61,22 +62,10 @@ class ProfileEditView extends StatelessWidget {
             children: [
               heightMedium,
               CustomTextField(
-                controller: homeData.nameField,
-                validate: (val) => homeData.validateName(val),
-                title: 'Name',
-                textInputType: TextInputType.name,
-              ),
-              CustomTextField(
-                validate: (val) => homeData.validateEmail(val),
-                controller: homeData.emailField,
-                title: 'Email',
-                textInputType: TextInputType.emailAddress,
-              ),
-              CustomTextField(
                 validate: (val) => homeData.onPlace(val),
                 controller: homeData.city,
                 title: 'City',
-                textInputType: TextInputType.number,
+                textInputType: TextInputType.name,
               ),
               CustomTextField(
                 validate: (val) => homeData.onPinCodeValidate(val),
@@ -100,13 +89,24 @@ class ProfileEditView extends StatelessWidget {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<HomeController>(
+        child: Consumer<ProfileProvider>(
           builder: (context, homePro, _) => PlatformButton(
-              text: const Text("Update"),
+              text: homePro.updateLoading == true
+                  ? const CupertinoActivityIndicator(
+                      color: Apc.white,
+                    )
+                  : const Text("Update"),
               color: Apc.primary,
               width: Responsive.widthMultiplier! * 83,
               height: Responsive.heightMultiplier! * 5,
-              onPressed: () async {}),
+              onPressed: () async {
+                await homePro
+                    .updateProfile(
+                        context, homeData.profileList[0].email.toString())
+                    .whenComplete(() async {
+                  return await homePro.fetchUserData();
+                });
+              }),
         ),
       ),
     );

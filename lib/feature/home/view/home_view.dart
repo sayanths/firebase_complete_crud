@@ -63,11 +63,16 @@ class HomeView extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                CircleAvatar(
-                                  radius: 25,
-                                  child: ClipOval(
-                                    child: CachedNetworkImage(
-                                        imageUrl: value.photo ?? ""),
+                                ClipOval(
+                                  child: CachedNetworkImage(
+                                    height: 50,
+                                    imageUrl: value.photo ?? "",
+                                    errorWidget: (context, url, error) {
+                                      return Image.asset(
+                                        'assets/logo google.png',
+                                        height: 50,
+                                      );
+                                    },
                                   ),
                                 )
                               ],

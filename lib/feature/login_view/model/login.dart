@@ -7,7 +7,7 @@ class UserModel {
   final bool verified;
   final String id;
   final String? city;
-  final int? pin;
+  final String? pin;
   final String? fblink;
   final String? instaLink;
 

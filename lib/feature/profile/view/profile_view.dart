@@ -107,21 +107,8 @@ class ProfileView extends StatelessWidget {
                       horizontal: Responsive.widthMultiplier! * 2,
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Positioned(
-                          left: Responsive.textMultiplier! * 2.5,
-                          top: Responsive.textMultiplier! * 5,
-                          child: const Text(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            "Profile",
-                            style: TextStyle(
-                                color: Apc.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
                         IconButton(
                           onPressed: () {
                             showDialog(
@@ -161,7 +148,7 @@ class ProfileView extends StatelessWidget {
                             );
                           },
                           icon: const Icon(
-                            IconlyLight.logout,
+                            Icons.logout,
                             color: Apc.white,
                           ),
                         ),

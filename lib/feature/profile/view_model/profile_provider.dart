@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo/feature/bottom_nav/view/bottom_nav.dart';
 import 'package:firebase_todo/feature/login_view/model/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileProvider extends ChangeNotifier {
   ProfileProvider() {
@@ -11,10 +14,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   final profileEditing = GlobalKey<FormState>();
-  final TextEditingController _nameField = TextEditingController();
-  TextEditingController get nameField => _nameField;
-  final TextEditingController _emailField = TextEditingController();
-  TextEditingController get emailField => _emailField;
+
   final TextEditingController _city = TextEditingController();
   TextEditingController get city => _city;
   final TextEditingController _pincode = TextEditingController();
@@ -126,6 +126,65 @@ class ProfileProvider extends ChangeNotifier {
         .toList();
     profileList.addAll(list);
 
+    notifyListeners();
+  }
+
+  onClear() {
+    city.clear();
+    pincode.clear();
+    instaLink.clear();
+    faceBookLink.clear();
+  }
+
+  bool updateLoading = false;
+  Future<void> updateProfile(BuildContext context, String id) async {
+    updateLoading = true;
+    notifyListeners();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    if (user != null) {
+      final DocumentReference userProfileRef =
+          firestore.collection('userProfile').doc(id);
+
+      Map<String, dynamic> data = {
+        "id": id,
+        "city": city.text.trim().toLowerCase(),
+        "pin": pincode.text.trim().toLowerCase(),
+        "instaLink": instaLink.text.trim(),
+        "fbLink": faceBookLink.text.trim(),
+      };
+      print(data.toString());
+      final docSnapshot = await userProfileRef.get();
+      if (docSnapshot.exists) {
+        await userProfileRef.update(data).then((value) async {
+          updateLoading = false;
+          notifyListeners();
+
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => const BottomNavigationCustom(),
+          ));
+          showTopSnackBar(
+            Overlay.of(context),
+            const CustomSnackBar.success(
+              message: 'Profile Updated Sucessfully!!',
+            ),
+          );
+        }).catchError((error) {
+          updateLoading = false;
+          notifyListeners();
+          notifyListeners();
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: "$error",
+            ),
+          );
+        });
+      }
+    }
+    updateLoading = false;
     notifyListeners();
   }
 }

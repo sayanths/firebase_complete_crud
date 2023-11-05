@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_todo/core/color/color.dart';
 import 'package:firebase_todo/core/custom_container/custom_container.dart';
 import 'package:firebase_todo/core/google_fonts/google_fonts.dart';
-import 'package:firebase_todo/feature/home/view/home_view.dart';
 import 'package:firebase_todo/feature/profile/view/widget/profile_edit.dart';
 import 'package:firebase_todo/feature/profile/view_model/profile_provider.dart';
 import 'package:firebase_todo/responsive/responsive.dart';
@@ -13,40 +12,75 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/custom_size/custom_size.dart';
+import '../../../home/view/home_view.dart';
 import '../../../home/view_model/home_controller.dart';
 
 class OverViewProfileView extends StatelessWidget {
   final ProfileProvider data;
-  const OverViewProfileView({super.key, required this.data});
+
+  const OverViewProfileView({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
+    // ignore: unnecessary_null_comparison
+    if (data == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Profile", style: K2DFonts.bold(fontSize: 18)),
+          backgroundColor: Apc.primary,
+          leading: IconButton(
             onPressed: () {
               Routes.back();
             },
             icon: Icon(
               Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
               color: Apc.white,
-            )),
-        elevation: 0,
-        title: Text(
-          "Profile",
-          style: K2DFonts.bold(fontSize: 18),
-        ),
-        backgroundColor: Apc.primary,
-        actions: [
-          Consumer<HomeController>(
-            builder: (context, value, _) => IconButton(
+            ),
+          ),
+          actions: [
+            Consumer<HomeController>(
+              builder: (context, value, _) => IconButton(
                 onPressed: () {
                   Routes.pushNonNamed(screen: ProfileEditView(data: data));
                 },
                 icon: const Icon(
                   Icons.edit,
                   color: Apc.white,
-                )),
+                ),
+              ),
+            )
+          ],
+        ),
+        body: const Center(
+          child: Text("Data not available"),
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Profile", style: K2DFonts.bold(fontSize: 18)),
+        backgroundColor: Apc.primary,
+        leading: IconButton(
+          onPressed: () {
+            Routes.back();
+          },
+          icon: Icon(
+            Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+            color: Apc.white,
+          ),
+        ),
+        actions: [
+          Consumer<HomeController>(
+            builder: (context, value, _) => IconButton(
+              onPressed: () {
+                Routes.pushNonNamed(screen: ProfileEditView(data: data));
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: Apc.white,
+              ),
+            ),
           )
         ],
       ),
@@ -65,10 +99,9 @@ class OverViewProfileView extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(width: 2, color: Apc.white),
                   image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        data.photo ?? "",
-                      ),
-                      fit: BoxFit.cover),
+                    image: CachedNetworkImageProvider(data.photo ?? ""),
+                    fit: BoxFit.cover,
+                  ),
                   color: Apc.grey,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -82,27 +115,27 @@ class OverViewProfileView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextWidget(
-                    name: 'Name :  ',
+                    name: 'Name:  ',
                     subTitle: data.name ?? "",
                   ),
                   heightSmall,
                   TextWidget(
-                    name: 'Email :  ',
+                    name: 'Email:  ',
                     subTitle: data.email ?? "",
                   ),
                   heightSmall,
                   TextWidget(
-                    name: 'City : ',
-                    subTitle: data.profileList[0].city == null
-                        ? "No found"
-                        : data.profileList[0].city ?? "",
+                    name: 'City: ',
+                    subTitle: data.profileList.isNotEmpty
+                        ? data.profileList[0].city.toString()
+                        : "No found",
                   ),
                   heightSmall,
                   TextWidget(
-                    name: 'Pin :  ',
-                    subTitle: data.profileList[0].pin == null
-                        ? "No found"
-                        : data.profileList[0].pin.toString(),
+                    name: 'Pin:  ',
+                    subTitle: data.profileList.isNotEmpty
+                        ? data.profileList[0].pin.toString()
+                        : "No found",
                   ),
                 ],
               ),
