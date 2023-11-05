@@ -13,17 +13,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProfileEditView extends StatelessWidget {
+  final ProfileProvider data;
   const ProfileEditView({
     super.key,
+    required this.data,
   });
 
   @override
   Widget build(BuildContext context) {
     final homeData = context.watch<ProfileProvider>();
 
-    // if () {
-
-    // }
+    data.emailField.text = homeData.profileList[0].email;
+    data.nameField.text = homeData.profileList[0].name;
+    data.city.text = homeData.profileList[0].city ?? "";
+    data.pincode.text = homeData.profileList[0].pin == null
+        ? ""
+        : homeData.profileList[0].pin.toString();
+    data.faceBookLink.text = homeData.profileList[0].fblink ?? "";
+    data.instaLink.text = homeData.profileList[0].instaLink ?? "";
 
     return Scaffold(
       backgroundColor: Apc.white,
@@ -76,6 +83,16 @@ class ProfileEditView extends StatelessWidget {
                 controller: homeData.pincode,
                 title: 'Pin',
                 textInputType: TextInputType.number,
+              ),
+              CustomTextField(
+                controller: homeData.instaLink,
+                title: 'Instagram Link',
+                textInputType: TextInputType.name,
+              ),
+              CustomTextField(
+                controller: homeData.faceBookLink,
+                title: 'Facebook Link',
+                textInputType: TextInputType.name,
               ),
             ],
           ),

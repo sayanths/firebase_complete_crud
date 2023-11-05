@@ -16,7 +16,7 @@ import '../../../../core/custom_size/custom_size.dart';
 import '../../../home/view_model/home_controller.dart';
 
 class OverViewProfileView extends StatelessWidget {
-  final HomeController data;
+  final ProfileProvider data;
   const OverViewProfileView({super.key, required this.data});
 
   @override
@@ -41,7 +41,7 @@ class OverViewProfileView extends StatelessWidget {
           Consumer<HomeController>(
             builder: (context, value, _) => IconButton(
                 onPressed: () {
-                  Routes.pushNonNamed(screen: const ProfileEditView());
+                  Routes.pushNonNamed(screen: ProfileEditView(data: data));
                 },
                 icon: const Icon(
                   Icons.edit,
@@ -91,14 +91,18 @@ class OverViewProfileView extends StatelessWidget {
                     subTitle: data.email ?? "",
                   ),
                   heightSmall,
-                  const TextWidget(
+                  TextWidget(
                     name: 'City : ',
-                    subTitle: "",
+                    subTitle: data.profileList[0].city == null
+                        ? "No found"
+                        : data.profileList[0].city ?? "",
                   ),
                   heightSmall,
-                  const TextWidget(
-                    name: 'Pin : ',
-                    subTitle: "",
+                  TextWidget(
+                    name: 'Pin :  ',
+                    subTitle: data.profileList[0].pin == null
+                        ? "No found"
+                        : data.profileList[0].pin.toString(),
                   ),
                 ],
               ),

@@ -1,8 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo/feature/login_view/model/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  ProfileProvider() {
+    profile();
+    fetchUserData();
+  }
+
   final profileEditing = GlobalKey<FormState>();
   final TextEditingController _nameField = TextEditingController();
   TextEditingController get nameField => _nameField;
@@ -36,9 +43,7 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-   String? validateName(String? value) {
+  String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your name';
     }
@@ -55,7 +60,7 @@ class ProfileProvider extends ChangeNotifier {
     return null;
   }
 
-String? validateEmail(String? value) {
+  String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter an email address';
     }
@@ -71,7 +76,7 @@ String? validateEmail(String? value) {
     return !regex.hasMatch(value) ? 'Enter a valid email address' : null;
   }
 
-   onPinCodeValidate(String? value) {
+  onPinCodeValidate(String? value) {
     if (value == null || value.isEmpty) {
       return 'Enter pin code';
     } else if (value.length != 6) {
@@ -97,8 +102,6 @@ String? validateEmail(String? value) {
     }
   }
 
-
-
   onPlace(String? value) {
     if (value == null || value.isEmpty) {
       return 'Enter your city';
@@ -111,5 +114,18 @@ String? validateEmail(String? value) {
     } else {
       return null;
     }
+  }
+
+  List<UserModel> profileList = [];
+  Future<void> profile() async {
+    profileList.clear();
+    QuerySnapshot<Map<String, dynamic>> snapshots =
+        await FirebaseFirestore.instance.collection('userProfile').get();
+    final list = snapshots.docs
+        .map((docSnap) => UserModel.fromSnapshot(docSnap))
+        .toList();
+    profileList.addAll(list);
+
+    notifyListeners();
   }
 }

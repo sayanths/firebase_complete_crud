@@ -6,6 +6,7 @@ import 'package:firebase_todo/core/custom_textfield/custom_textfield.dart';
 import 'package:firebase_todo/feature/home/view_model/home_controller.dart';
 import 'package:firebase_todo/feature/login_view/view/login_view.dart';
 import 'package:firebase_todo/feature/profile/view/widget/profile_overview.dart';
+import 'package:firebase_todo/feature/profile/view_model/profile_provider.dart';
 import 'package:firebase_todo/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -19,6 +20,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ProfileProvider>().fetchUserData();
     return Consumer<HomeController>(
       builder: (context, value, _) => Scaffold(
         body: SingleChildScrollView(
@@ -35,7 +37,7 @@ class ProfileView extends StatelessWidget {
                   Positioned(
                     bottom: -60,
                     left: 15,
-                    child: Consumer<HomeController>(
+                    child: Consumer<ProfileProvider>(
                       builder: (context, value, _) => GestureDetector(
                         onTap: () {
                           Routes.pushNonNamed(

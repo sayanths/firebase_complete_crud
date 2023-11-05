@@ -6,14 +6,21 @@ class UserModel {
   final String? profile;
   final bool verified;
   final String id;
+  final String? city;
+  final int? pin;
+  final String? fblink;
+  final String? instaLink;
 
-  UserModel(
-     {
+  UserModel({
     required this.name,
     required this.email,
     this.profile,
     required this.verified,
-    required this.id
+    required this.id,
+    this.city,
+    this.pin,
+    this.fblink,
+    this.instaLink,
   });
 
   factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap) {
@@ -23,7 +30,10 @@ class UserModel {
       verified: snap['verified'],
       profile: snap['profile'],
       id: snap['uid'],
-
+      city: snap['city'],
+      fblink: snap['fblink'],
+      instaLink: snap['instaLink'],
+      pin: snap['pin'],
     );
   }
 
@@ -34,6 +44,10 @@ class UserModel {
       "profile": profile,
       "verified": verified,
       "uid": id,
+      "city": city,
+      "fblink": fblink,
+      "pin": pin,
+      "instaLink": instaLink
     };
   }
 }

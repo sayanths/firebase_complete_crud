@@ -50,7 +50,7 @@ class LoginController extends ChangeNotifier {
         );
         await FirebaseFirestore.instance
             .collection('userProfile')
-            .doc(userDetail.email)
+            .doc(userData.email)
             .set(
               userData.toSnapshot(),
             );
